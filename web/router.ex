@@ -28,6 +28,7 @@ scope "/", Spike do
     pipe_through [:browser, :authenticate_user]
 
     resources "/user", UserController
+    resources "/tasks", TaskController
   end
 
   # Other scopes may use custom stacks.
