@@ -31,8 +31,6 @@ defmodule Spike.Auth do
   def attempt_login(conn, email, given_pass, ops) do
     repo = Keyword.fetch!(ops, :repo)
     user = repo.get_by(Spike.User, email: email)
-    IO.inspect user
-    IO.inspect user.password_hash
     cond do
       user && user.password_hash == given_pass ->
         {:ok, login(conn, user)}

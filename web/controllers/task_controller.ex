@@ -3,8 +3,18 @@ defmodule Spike.TaskController do
 
   alias Spike.Task
 
-  def index(conn, _params) do
-    tasks = Repo.all(Task)
+  def action(conn, _) do
+    # adds the user as the third argument of the function
+    apply(__MODULE__, action_name(conn),
+      [conn, conn.params, conn.assigns.current_user])
+  end
+
+  def user_tasks(user) do
+    assoc(user, :tasks)
+  end
+
+  def index(conn, _params, user) do
+    tasks = user |> user_tasks |> Repo.all
     render(conn, "index.html", tasks: tasks)
   end
 
@@ -13,8 +23,11 @@ defmodule Spike.TaskController do
     render(conn, "new.html", changeset: changeset)
   end
 
-  def create(conn, %{"task" => task_params}) do
-    changeset = Task.changeset(%Task{}, task_params)
+  def create(conn, %{"task" => task_params}, user) do
+    changeset =
+      user
+      |> build_assoc(:tasks)
+      |> Task.changeset(task_params)
 
     case Repo.insert(changeset) do
       {:ok, _task} ->
@@ -26,19 +39,19 @@ defmodule Spike.TaskController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
-    task = Repo.get!(Task, id)
+  def show(conn, %{"id" => id}, user) do
+    task = user |> user_tasks |> Repo.get!(id)
     render(conn, "show.html", task: task)
   end
 
-  def edit(conn, %{"id" => id}) do
-    task = Repo.get!(Task, id)
+  def edit(conn, %{"id" => id}, user) do
+    task = user |> user_tasks |> Repo.get!(id)
     changeset = Task.changeset(task)
     render(conn, "edit.html", task: task, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "task" => task_params}) do
-    task = Repo.get!(Task, id)
+  def update(conn, %{"id" => id, "task" => task_params}, user) do
+    task = user |> user_tasks |> Repo.get!(id)
     changeset = Task.changeset(task, task_params)
 
     case Repo.update(changeset) do
@@ -51,8 +64,8 @@ defmodule Spike.TaskController do
     end
   end
 
-  def delete(conn, %{"id" => id}) do
-    task = Repo.get!(Task, id)
+  def delete(conn, %{"id" => id}, user) do
+    task = user |> user_tasks |> Repo.get!(id)
 
     # Here we use delete! (with a bang) because we expect
     # it to always work (and if it does not, it will raise).
