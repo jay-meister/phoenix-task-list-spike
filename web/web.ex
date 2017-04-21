@@ -36,6 +36,8 @@ defmodule Spike.Web do
 
       import Spike.Router.Helpers
       import Spike.Gettext
+
+      # import Spike.Auth, only: [authenticate_user: 2]
     end
   end
 
@@ -58,6 +60,8 @@ defmodule Spike.Web do
   def router do
     quote do
       use Phoenix.Router
+
+      import Spike.Auth, only: [authenticate_user: 2]
     end
   end
 
