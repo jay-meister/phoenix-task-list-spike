@@ -7,7 +7,7 @@ defmodule Spike.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
-    plug Spike.Auth
+    plug Spike.Auth, repo: Spike.Repo
   end
 
   pipeline :api do
@@ -15,9 +15,10 @@ defmodule Spike.Router do
   end
 
   # Unauthed routes
-  scope "/", Spike do
+scope "/", Spike do
     pipe_through :browser # Use the default browser stack
 
+    resources "/session", SessionController, only: [:new, :create, :delete]
     get "/", PageController, :index
   end
 
