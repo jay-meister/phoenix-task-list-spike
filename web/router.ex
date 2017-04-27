@@ -29,6 +29,7 @@ scope "/", Spike do
 
     resources "/user", UserController
     resources "/tasks", TaskController
+    get "/lists", ListController, :index
   end
 
   # Other scopes may use custom stacks.

@@ -1,0 +1,30 @@
+<h2><=% "Tasks for " ++ @date =></h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Duration</th>
+      <th>Complete</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for task <- @tasks do %>
+    <tr>
+      <td><%= task.title %></td>
+      <td><%= task.duration %></td>
+      <td><%= task.complete %></td>
+      <td class="text-right">
+        <%= link "Toggle Complete", to: list_path(@conn, :show, date), class: "btn btn-default btn-xs" %>
+        <%= link "Remove", to: list_path(@conn, :show, date), class: "btn btn-default btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+
+
+
+<%= link "Back", to: list_path(@conn, :index) %>

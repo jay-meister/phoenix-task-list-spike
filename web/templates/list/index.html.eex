@@ -1,0 +1,20 @@
+<h2>Listing tasks</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Date</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for date <- @dates do %>
+    <tr>
+      <td><%= date %></td>
+      <td class="text-right">
+        <%= link "Show", to: list_path(@conn, :show, date), class: "btn btn-default btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
