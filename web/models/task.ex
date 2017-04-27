@@ -7,6 +7,7 @@ defmodule Spike.Task do
     field :complete, :boolean, default: false
     field :completed_at, Ecto.DateTime
     belongs_to :user, Spike.User
+    has_many :datesdue, Spike.DatesDue
 
     timestamps()
   end
