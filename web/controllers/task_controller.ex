@@ -18,7 +18,7 @@ defmodule Spike.TaskController do
     render(conn, "index.html", tasks: tasks)
   end
 
-  def new(conn, _params) do
+  def new(conn, _params, user) do
     changeset = Task.changeset(%Task{})
     render(conn, "new.html", changeset: changeset)
   end

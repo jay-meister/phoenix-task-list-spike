@@ -26,4 +26,4 @@
 
 
 
-<%= link "Back", to: list_path(@conn, :index) %>
+<%= link "See All Lists", to: list_path(@conn, :index) %>

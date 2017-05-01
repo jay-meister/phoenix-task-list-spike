@@ -19,17 +19,23 @@ defmodule Spike.ListController do
     res = date_string
     |> String.split("-")
     |> Enum.reverse
-    |> Enum.map(&Integer.parse/1)
-    |> Enum.map(fn({i, _}) -> i end)
+    |> parse_to_integers
     |> List.to_tuple
     |> (&({&1, {12, 0, 0}})).()
     |> N.from_erl
     |> (fn({:ok, ndt}) -> ndt end).()
   end
   def naive_beg_and_end(naive), do: {T.beginning_of_day(naive), T.end_of_day(naive)}
-
+  def naive_to_ecto(naive), do: naive |> N.to_erl |> EDT.from_erl
   def ecto_to_naive(ectodt), do: ectodt |> EDT.to_erl |> N.from_erl!
   def ecto_to_date(ectodt), do: ectodt |> EDT.to_erl |> (fn({date, time}) -> date end).() |> D.from_erl!
+
+  def parse_to_integers(list), do: list |> Enum.map(&Integer.parse/1) |> Enum.map(fn({i, _}) -> i end)
+
+  # view helpers
+  def today_readable, do: Date.utc_today |> Date.to_string |> String.split("-") |> Enum.reverse |> Enum.join("-")
+
+
 
   def index(conn, params) do
     user_id = conn.assigns.current_user.id
@@ -55,6 +61,7 @@ defmodule Spike.ListController do
   def show(conn, %{"date" => date}) do
     user_id = conn.assigns.current_user.id
     {day_start, day_end} = date |> readable_to_naive |> naive_beg_and_end
+
     IO.inspect day_start
     IO.inspect day_end
     IO.inspect user_id
@@ -65,6 +72,38 @@ defmodule Spike.ListController do
       and t.user_id == ^user_id
 
     IO.inspect tasks
+
     render conn, "show.html", tasks: tasks, date: date
   end
+
+  def create(conn, %{"date" => date, "tasks" => tasks}) do
+    user_id = conn.assigns.current_user
+    naive = date |> readable_to_naive |> naive_to_ecto
+    tasks_int = tasks |> parse_to_integers
+
+    IO.inspect naive
+    IO.inspect tasks_int
+    for task_id <- tasks_int do
+      case Repo.insert(%DatesDue{task_id: task_id, date_due: naive} ) do
+        {:ok, _} -> IO.inspect "OK inserted"
+        {:error, _} -> IO.inspect "Error"
+      end
+    end
+
+    conn
+    |> put_flash(:info, "task added to list")
+    |> redirect(to: task_path(conn, :index))
+  end
 end
+
+
+
+
+
+
+
+
+
+
+
+#

@@ -21,6 +21,7 @@
 
       <td class="text-right">
         <%= link "Toggle Complete", to: task_path(@conn, :update, task), class: "btn btn-default btn-xs" %>
+        <%= button "Do Today", to: list_path(@conn, :create, DateHelpers.today_readable, tasks: [task.id]), class: "btn btn-default btn-xs" %>
         <%= link "Show", to: task_path(@conn, :show, task), class: "btn btn-default btn-xs" %>
         <%= link "Edit", to: task_path(@conn, :edit, task), class: "btn btn-default btn-xs" %>
         <%= link "Delete", to: task_path(@conn, :delete, task), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>

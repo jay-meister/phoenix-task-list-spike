@@ -18,10 +18,16 @@
           <ul class="nav nav-pills pull-right">
             <%= if @current_user do %>
               <li>
-                <%= link "Log out", to: session_path(@conn, :delete, @current_user), method: "delete" %>
+                <%= link "All Tasks", to: task_path(@conn, :index) %>
+              </li>
+              <li>
+                <%= link "Todays List", to: list_path(@conn, :show, DateHelpers.today_readable) %>
               </li>
               <li>
                 <%= link "#{@current_user.first_name} #{@current_user.last_name}", to: user_path(@conn, :show, @current_user) %>
+              </li>
+              <li>
+                <%= link "Log out", to: session_path(@conn, :delete, @current_user), method: "delete" %>
               </li>
             <% else %>
               <li>
@@ -30,7 +36,6 @@
             <% end %>
           </ul>
         </nav>
-        <span class="logo"></span>
       </header>
 
       <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
