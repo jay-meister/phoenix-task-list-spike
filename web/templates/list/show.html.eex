@@ -1,4 +1,4 @@
-<h2><=% "Tasks for " ++ @date =></h2>
+<h2>Tasks for <%= @date %></h2>
 
 <table class="table">
   <thead>
@@ -16,8 +16,7 @@
       <td><%= task.duration %></td>
       <td><%= task.complete %></td>
       <td class="text-right">
-        <%= link "Toggle Complete", to: list_path(@conn, :show, date), class: "btn btn-default btn-xs" %>
-        <%= link "Remove", to: list_path(@conn, :show, date), class: "btn btn-default btn-xs" %>
+        <%= link "Remove", to: list_path(@conn, :show, @date), class: "btn btn-default btn-xs" %>
       </td>
     </tr>
 <% end %>

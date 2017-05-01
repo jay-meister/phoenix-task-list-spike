@@ -27,3 +27,6 @@ end
 # Repo.all from t in Task, join: d in assoc(t, :datesdue), where: d.date_due <= ^today_end and d.date_due >= ^today_beg
 # if for some reason we need the date loaded
 # Repo.all from t in Task, join: d in assoc(t, :datesdue), where: d.date_due <= ^today_end and d.date_due >= ^today_beg, preload: [datesdue: d]
+
+# Get all dates due for a given user
+# Repo.all from d in DatesDue, join: t in assoc(d, :task), where: t.user_id == 1

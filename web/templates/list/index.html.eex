@@ -12,7 +12,7 @@
     <tr>
       <td><%= date %></td>
       <td class="text-right">
-        <%= link "Show", to: list_path(@conn, :show, date), class: "btn btn-default btn-xs" %>
+        <%= link "Show list", to: list_path(@conn, :show, date), class: "btn btn-default btn-xs" %>
       </td>
     </tr>
 <% end %>
