@@ -32,6 +32,7 @@ scope "/", Spike do
     get "/lists", ListController, :index
     get "/lists/:date", ListController, :show
     post "/lists/:date", ListController, :create
+    delete "/lists/:date", ListController, :delete
   end
 
   # Other scopes may use custom stacks.

@@ -67,6 +67,7 @@ defmodule Spike.ListController do
     IO.inspect user_id
     tasks = Repo.all from t in Spike.Task,
       join: d in assoc(t, :datesdue),
+      preload: [datesdue: d],
       where: d.date_due <= ^day_end
       and d.date_due >= ^day_start
       and t.user_id == ^user_id
@@ -93,6 +94,24 @@ defmodule Spike.ListController do
     conn
     |> put_flash(:info, "task added to list")
     |> redirect(to: task_path(conn, :index))
+  end
+
+  def delete(conn, %{"date" => date, "task" => task}) do
+    {task_id, _} = Integer.parse(task)
+
+    date_struct = Repo.get_by DatesDue, task_id: task_id
+
+    case date_struct do
+      %DatesDue{} ->
+        Repo.delete! date_struct
+        conn
+        |> put_flash(:info, "Task removed from list")
+        |> redirect(to: list_path(conn, :show, date))
+      nil ->
+        conn
+        |> put_flash(:error, "Task couldn't be found")
+        |> redirect(to: list_path(conn, :show, date))
+    end
   end
 end
 

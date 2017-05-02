@@ -16,7 +16,7 @@
       <td><%= task.duration %></td>
       <td><%= task.complete %></td>
       <td class="text-right">
-        <%= link "Remove", to: list_path(@conn, :show, @date), class: "btn btn-default btn-xs" %>
+        <%= button "Remove", method: "delete", to: list_path(@conn, :delete, @date, task: task.id), class: "btn btn-default btn-xs" %>
       </td>
     </tr>
 <% end %>
