@@ -20,4 +20,10 @@ defmodule Spike.Task do
     |> cast(params, [:title, :duration, :complete])
     |> validate_required([:title])
   end
+
+  def complete_task_changeset(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:complete, :completed_at])
+    |> validate_required([:complete])
+  end
 end

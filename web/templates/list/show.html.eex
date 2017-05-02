@@ -17,6 +17,7 @@
       <td><%= task.complete %></td>
       <td class="text-right">
         <%= button "Remove", method: "delete", to: list_path(@conn, :delete, @date, task: task.id), class: "btn btn-default btn-xs" %>
+        <%= button "Complete", to: task_path(@conn, :update, task, complete: !task.complete), method: "put", class: "btn btn-default btn-xs" %>
       </td>
     </tr>
 <% end %>

@@ -8,7 +8,6 @@ defmodule Spike.ListController do
   alias DateTime, as: DT
   alias Timex, as: T
 
-
   def naive_to_readable(naive), do: naive |> N.to_date |> D.to_string |> toggle_ymd_to_dmy
 
   # "22-03-2017" -> "2017-03-22"
@@ -62,17 +61,12 @@ defmodule Spike.ListController do
     user_id = conn.assigns.current_user.id
     {day_start, day_end} = date |> readable_to_naive |> naive_beg_and_end
 
-    IO.inspect day_start
-    IO.inspect day_end
-    IO.inspect user_id
     tasks = Repo.all from t in Spike.Task,
       join: d in assoc(t, :datesdue),
       preload: [datesdue: d],
       where: d.date_due <= ^day_end
       and d.date_due >= ^day_start
       and t.user_id == ^user_id
-
-    IO.inspect tasks
 
     render conn, "show.html", tasks: tasks, date: date
   end

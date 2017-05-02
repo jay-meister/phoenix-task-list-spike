@@ -3,7 +3,6 @@
 <table class="table">
   <thead>
     <tr>
-      <th>User</th>
       <th>Title</th>
       <th>Duration</th>
       <th>Complete</th>
@@ -14,7 +13,6 @@
   <tbody>
 <%= for task <- @tasks do %>
     <tr>
-      <td><%= task.user_id %></td>
       <td><%= task.title %></td>
       <td><%= task.duration %></td>
       <td><%= task.complete %></td>

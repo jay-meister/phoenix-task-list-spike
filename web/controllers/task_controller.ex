@@ -50,6 +50,45 @@ defmodule Spike.TaskController do
     render(conn, "edit.html", task: task, changeset: changeset)
   end
 
+  defp date_or_today(params) do
+    case params do
+      %{"date" => date} = params ->
+        Spike.ListController.readable_to_naive(date)
+      _ ->
+        NaiveDateTime.utc_now
+    end
+  end
+
+  # set task as complete or incomplete
+  def update(conn, %{"id" => id, "complete" => complete} = params, user) do
+    task = user |> user_tasks |> Repo.get!(id)
+
+    # if task is being completed, we want to add a completed_at date
+    # if it is given in query, then set that to the date of completion, otherwise set today
+    complete = if complete == "true", do: true, else: false
+    completed_at = if complete do
+      params |> date_or_today |> Spike.ListController.naive_to_ecto
+    else
+      nil
+    end
+    IO.inspect task
+    update_params = %{complete: complete, completed_at: completed_at}
+    IO.inspect update_params
+    changeset = Task.complete_task_changeset(task, update_params)
+    IO.inspect changeset
+    case Repo.update(changeset) do
+      {:ok, task} ->
+        conn
+        |> put_flash(:info, "Task updated successfully.")
+        |> redirect(to: list_path(conn, :show, Spike.ListController.today_readable))
+      {:error, changeset} ->
+        IO.inspect changeset
+        conn
+        |> put_flash(:error, "There was an error")
+        |> redirect(to: list_path(conn, :show, Spike.ListController.today_readable))
+    end
+  end
+
   def update(conn, %{"id" => id, "task" => task_params}, user) do
     task = user |> user_tasks |> Repo.get!(id)
     changeset = Task.changeset(task, task_params)
