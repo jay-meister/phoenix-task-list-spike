@@ -20,6 +20,8 @@ scope "/", Spike do
 
     resources "/session", SessionController, only: [:new, :create, :delete]
     get "/", PageController, :index
+    get "/user/new", UserController, :new
+    post "/user/new", UserController, :create
   end
 
 
@@ -27,7 +29,7 @@ scope "/", Spike do
   scope "/", Spike do
     pipe_through [:browser, :authenticate_user]
 
-    resources "/user", UserController
+    resources "/user", UserController, except: [:new, :create]
     resources "/tasks", TaskController
     get "/lists", ListController, :index
     get "/lists/:date", ListController, :show
